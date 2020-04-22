@@ -62,8 +62,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CameraFollow.cs" />
-    <Compile Include="Assets\Car2dController.cs" />
+    <Compile Include="Assets\HSPackages\InfiniteGround\Script\Ground.cs" />
+    <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\Car2dController.cs" />
+    <Compile Include="Assets\Scripts\RoadTrigger.cs" />
+    <None Include="Assets\HSPackages\InfiniteGround\Documentation\ReadMe.txt" />
+    <None Include="Assets\HSPackages\InfiniteGround\Shader\Ground.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>F:/Unity/Projekt_SM/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
