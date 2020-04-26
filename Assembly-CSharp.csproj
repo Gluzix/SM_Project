@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\HSPackages\InfiniteGround\Script\Ground.cs" />
+    <Compile Include="Assets\Scripts\AI_Controller.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\Car2dController.cs" />
     <Compile Include="Assets\Scripts\RoadTrigger.cs" />
