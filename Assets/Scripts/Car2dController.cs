@@ -14,13 +14,11 @@ public class Car2dController : MonoBehaviour
     float minSlippyVelocity = 1.5f;
     float speedTuning = 3.0f;
     public float roadStickness = 1.0f;
-    GameObject roadPos;
 
     // Start is called before the first frame update
     void Start()
     {
-        roadPos = GameObject.Find("Asphalt");
-        //52:36 - tutorial stopped
+        
     }
 
     // Update is called once per frame
@@ -61,15 +59,11 @@ public class Car2dController : MonoBehaviour
             rb.AddForce(transform.up * brakeForce);
         }
 
-
         float tf = Mathf.Lerp(0, torqueForce, rb.velocity.magnitude / 4 );
-
 
         rb.angularVelocity = Input.GetAxis("Horizontal") * tf;
 
-
-
-        Debug.Log(rb.velocity.magnitude*5);
+        //Debug.Log(rb.velocity.magnitude*5);
     }
 
     Vector2 ForwardVelocity()
