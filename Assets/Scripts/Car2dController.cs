@@ -63,7 +63,7 @@ public class Car2dController : MonoBehaviour
 
         rb.angularVelocity = Input.GetAxis("Horizontal") * tf;
 
-        Debug.Log(rb.velocity.magnitude*5);
+        //Debug.Log(rb.velocity.magnitude*5);
     }
 
     Vector2 ForwardVelocity()
