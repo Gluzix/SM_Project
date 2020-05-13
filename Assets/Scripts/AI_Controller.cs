@@ -6,24 +6,29 @@ public class AI_Controller : MonoBehaviour
 {
     // Start is called before the first frame update
     Transform target;
-    float speedForce = 10f;
-    float brakeForce = -50f;
-    float driftFactorSticky = 0.9f;
-    float driftFactorSlippy = 0.6f;
-    float maxStickyVelocity = 100f;
-    float minSlippyVelocity = 100f;
-    float speed = 13f;
-    float torqueForce = 400f;
+    public GameObject map;
+    public float speedForce = 10f;
+    public float brakeForce = -50f;
+    public float driftFactorSticky = 0.9f;
+    public float driftFactorSlippy = 0.6f;
+    public float maxStickyVelocity = 100f;
+    public float minSlippyVelocity = 100f;
+    public float speed = 13f;
+    public float torqueForce = 400f;
     public float roadStickness = 1.0f;
-    int index = 0;
+    int index = 1;
+    int position = -1;
     Rigidbody2D rb;
     float dirNum;
-    float additionalSize = 0.2f;
+    int direction = 0;
+    int lap = 1;
 
     void Start()
     {
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
+
+        map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
     }
 
     // Update is called once per frame
@@ -46,7 +51,30 @@ public class AI_Controller : MonoBehaviour
 
         if (DetectObstacles())
         {
-            rb.angularVelocity = 50f;
+            rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
+
+            if ( direction == 0 )
+            {
+                rb.angularVelocity = 200f;
+                rb.AddForce(transform.up * speed * 2f);
+            }
+            else if( direction == 1 )
+            {
+                rb.angularVelocity = -200f;
+                rb.AddForce(transform.up * speed * 2f);
+            }
+            else if( direction == -1 )
+            {
+                rb.angularVelocity = 100f;
+                rb.AddForce(transform.up * speed * 2f);
+
+            }
+            else if( direction == -2 )
+            {
+                rb.angularVelocity = -100f;
+                rb.AddForce(transform.up * speed * 2f);
+            }
+
         }
         else
         {
@@ -69,7 +97,7 @@ public class AI_Controller : MonoBehaviour
         rb.AddForce(transform.up * speed * 2f);
 
 
-        if (Vector2.Distance(transform.position, target.position) < 2f)
+        /*if (Vector2.Distance(transform.position, target.position) < 2f)
         {
             string brakes;
             if( index == 0 )
@@ -91,26 +119,106 @@ public class AI_Controller : MonoBehaviour
             {
                 index++;
             }
-        }
+        } */
     }
 
     private bool DetectObstacles()
     {
-        Debug.DrawLine( transform.position + transform.up * 6f, transform.position+transform.up * 1.1f );
+        bool ifCollided = false;
 
-        RaycastHit2D hitFront = Physics2D.Raycast( transform.position + transform.up * 6f, transform.position + transform.up * 1.1f, 6f, 1 << LayerMask.NameToLayer("Racers") );
+        Debug.DrawLine( transform.position + transform.up * 2.5f, transform.position + transform.up * 1.1f );
+        Debug.DrawLine( transform.position + transform.up * 2.5f + transform.right * 0.2f, transform.position + transform.up * 1.1f + transform.right * 0.2f);
+        Debug.DrawLine( transform.position + transform.up * 2.5f + transform.right * (-0.2f), transform.position + transform.up * 1.1f + transform.right * (-0.2f) );
 
-        /*if ( hitFront.collider != null)
+        RaycastHit2D raycastHit = Physics2D.Raycast( transform.position + transform.up * 2.5f, transform.position + transform.up * 1.1f, 2.5f, 1 << LayerMask.NameToLayer("Racers") );
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
         {
-            Debug.Log("hit: " + hitFront.collider.name);
-            
+            ifCollided = true;
+        }
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 2.5f + transform.right * 0.2f, transform.position + transform.up * 1.1f + transform.right * 0.2f, 2.5f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+        }
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 2.5f + transform.right * (-0.2f), transform.position + transform.up * 1.1f + transform.right * (-0.2f), 2.5f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+        }
+
+        Debug.DrawLine(transform.position + transform.up * 2.5f + transform.right * 0.5f, transform.position + transform.up * 1.1f + transform.right * 0.2f);
+        Debug.DrawLine(transform.position + transform.up * 2.5f + transform.right * (-0.5f), transform.position + transform.up * 1.1f + transform.right * (-0.2f) );
+
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 2.5f + transform.right * 0.5f, transform.position + transform.up * 1.1f + transform.right * 0.2f, 2.5f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = 0;
+        }
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 2.5f + transform.right * (-0.5f), transform.position + transform.up * 1.1f + transform.right * (-0.2f), 2.5f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = 1;
+        }
+
+        Debug.DrawLine(transform.position + transform.up * 2f + transform.right * 1f, transform.position + transform.up * 1.1f + transform.right * 0.2f);
+        Debug.DrawLine(transform.position + transform.up * 2f + transform.right * (-1f), transform.position + transform.up * 1.1f + transform.right * (-0.2f));
+
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 2f + transform.right * 1f, transform.position + transform.up * 1.1f + transform.right * 0.2f, 2f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = 0;
+        }
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 2f + transform.right * (-1f), transform.position + transform.up * 1.1f + transform.right * (-0.2f), 2f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = 1;
+        }
+
+        Debug.DrawLine(transform.position + transform.up * 1.5f + transform.right * 1f, transform.position + transform.up * 1.1f + transform.right * 0.2f);
+        Debug.DrawLine(transform.position + transform.up * 1.5f + transform.right * (-1f), transform.position + transform.up * 1.1f + transform.right * (-0.2f));
+
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 1.5f + transform.right * 1f, transform.position + transform.up * 1.1f + transform.right * 0.2f, 2f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = 0;
+        }
+        raycastHit = Physics2D.Raycast(transform.position + transform.up * 1.5f + transform.right * (-1f), transform.position + transform.up * 1.1f + transform.right * (-0.2f), 2f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = 1;
+        }
+
+
+        Debug.DrawLine(transform.position + transform.right * 0.45f, transform.position + transform.right * 0.2f);
+        Debug.DrawLine(transform.position + transform.right * (-0.45f), transform.position + transform.right * (-0.2f));
+
+        raycastHit = Physics2D.Raycast(transform.position + transform.right * 0.45f, transform.position + transform.right * 0.2f, 2f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = -1;
+        }
+        raycastHit = Physics2D.Raycast(transform.position + transform.right * (-0.45f), transform.position + transform.right * (-0.2f), 2f, 1 << LayerMask.NameToLayer("Racers"));
+        if (raycastHit.collider != null && raycastHit.collider.name != this.name)
+        {
+            ifCollided = true;
+            direction = -2;
+        }
+
+        if (ifCollided)
+        {
             return true;
         }
         else
         {
             return false;
-        }*/
-        return false;
+        }
     }
 
     Vector2 RightVelocity()
@@ -126,7 +234,7 @@ public class AI_Controller : MonoBehaviour
     float AngleDir(Vector3 fwd, Vector3 targetDir, Vector3 up)
     {
         Vector3 perp = Vector3.Cross(fwd, targetDir);
-
+        
         float dir = Vector3.Dot(perp, up);
 
         if (dir > 0f)
@@ -142,4 +250,41 @@ public class AI_Controller : MonoBehaviour
             return 0f;
         }
     }
+
+    /*void OnTriggerExit2D(Collider2D other)
+    {
+        if ( other.gameObject.transform.parent.name == "path" )
+        {
+
+        }
+    }*/
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if ( other.gameObject.name == target.name )
+        {
+            string brakes;
+            if (index == 0)
+            {
+                brakes = "controlPoint";
+            }
+            else
+            {
+                brakes = "controlPoint (" + index.ToString() + ")";
+            }
+
+            target = GameObject.Find(brakes).GetComponent<Transform>();
+
+            if (index == 15)
+            {
+                index = 0;
+            }
+            else
+            {
+                index++;
+            }
+        }
+    }
+
 }

@@ -5,20 +5,27 @@ using UnityEngine;
 public class Car2dController : MonoBehaviour
 {
     //zmienna speedForce określa jaka siła zostanie dodana do wektora up
-    float speedForce = 10f;
-    float brakeForce = -50f;
-    float torqueForce = 400f;
-    float driftFactorSticky = 0.9f;
-    float driftFactorSlippy = 1f;
-    float maxStickyVelocity = 2.5f;
-    float minSlippyVelocity = 1.5f;
-    float speedTuning = 3.0f;
+    Transform target;
+    public GameObject map;
+    public float speedForce = 10f;
+    public float brakeForce = -50f;
+    public float torqueForce = 400f;
+    public float driftFactorSticky = 0.9f;
+    public float driftFactorSlippy = 1f;
+    public float maxStickyVelocity = 2.5f;
+    public float minSlippyVelocity = 1.5f;
+    public float speedTuning = 3.0f;
     public float roadStickness = 1.0f;
+    int position = -1;
+    int index = 0;
+    int lap = 1;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        target = GameObject.Find("controlPoint").GetComponent<Transform>();
+
+        map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
     }
 
     // Update is called once per frame
@@ -32,15 +39,6 @@ public class Car2dController : MonoBehaviour
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
         float driftFactor = driftFactorSticky;
-
-       /* if ( gameObject.transform.position.x > ( roadPos.transform.position.x) - ( roadPos.GetComponent<MeshRenderer>().bounds.size.x / 2 ) )
-        {
-            roadStickness = 1.0f;
-        }
-        else
-        {
-            roadStickness = 0.5f;
-        } */     
 
         if (RightVelocity().magnitude > maxStickyVelocity)
         {
@@ -63,7 +61,6 @@ public class Car2dController : MonoBehaviour
 
         rb.angularVelocity = Input.GetAxis("Horizontal") * tf;
 
-        //Debug.Log(rb.velocity.magnitude*5);
     }
 
     Vector2 ForwardVelocity()
@@ -75,4 +72,34 @@ public class Car2dController : MonoBehaviour
     {
         return transform.right * Vector2.Dot(GetComponent<Rigidbody2D>().velocity, transform.right );
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if (other.gameObject.name == target.name)
+        {
+            string brakes;
+            if (index == 0)
+            {
+                brakes = "controlPoint";
+            }
+            else
+            {
+                brakes = "controlPoint (" + index.ToString() + ")";
+            }
+
+            target = GameObject.Find(brakes).GetComponent<Transform>();
+
+            if (index == 15)
+            {
+                index = 0;
+                lap++;
+            }
+            else
+            {
+                index++;
+            }
+        }
+    }
+
 }
