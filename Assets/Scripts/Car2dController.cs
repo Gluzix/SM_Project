@@ -16,9 +16,12 @@ public class Car2dController : MonoBehaviour
     public float minSlippyVelocity = 1.5f;
     public float speedTuning = 3.0f;
     public float roadStickness = 1.0f;
+    int allControlPoints = 1;
+    int currentControlPoints = 1;
     int position = -1;
     int index = 0;
     int lap = 1;
+    bool bIfDriving = true;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +29,7 @@ public class Car2dController : MonoBehaviour
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
 
         map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
+        this.GetComponent<racerStat>().SetName(this.name);
     }
 
     // Update is called once per frame
@@ -38,29 +42,34 @@ public class Car2dController : MonoBehaviour
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
-        float driftFactor = driftFactorSticky;
-
-        if (RightVelocity().magnitude > maxStickyVelocity)
+        if ( bIfDriving )
         {
-            driftFactor = driftFactorSlippy;
+
+            float driftFactor = driftFactorSticky;
+
+            if (RightVelocity().magnitude > maxStickyVelocity)
+            {
+                driftFactor = driftFactorSlippy;
+            }
+
+            rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
+
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                rb.AddForce(transform.up * speedForce * speedTuning * roadStickness);
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                rb.AddForce(transform.up * brakeForce);
+            }
+
+            float tf = Mathf.Lerp(0, torqueForce, rb.velocity.magnitude / 4);
+
+            rb.angularVelocity = Input.GetAxis("Horizontal") * tf;
+
         }
-
-        rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
-
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            rb.AddForce(transform.up * speedForce * speedTuning * roadStickness);
-        }
-
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            rb.AddForce(transform.up * brakeForce);
-        }
-
-        float tf = Mathf.Lerp(0, torqueForce, rb.velocity.magnitude / 4 );
-
-        rb.angularVelocity = Input.GetAxis("Horizontal") * tf;
-
+       
     }
 
     Vector2 ForwardVelocity()
@@ -75,31 +84,42 @@ public class Car2dController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-
         if (other.gameObject.name == target.name)
         {
             string brakes;
-            if (index == 0)
+            if (currentControlPoints == 0)
             {
                 brakes = "controlPoint";
             }
             else
             {
-                brakes = "controlPoint (" + index.ToString() + ")";
+                brakes = "controlPoint (" + currentControlPoints.ToString() + ")";
             }
 
             target = GameObject.Find(brakes).GetComponent<Transform>();
 
-            if (index == 15)
+            if (currentControlPoints == 15)
             {
-                index = 0;
+                currentControlPoints = 0;
                 lap++;
             }
             else
             {
-                index++;
+                currentControlPoints++;
+                allControlPoints++;
             }
+
+            if ( lap > map.GetComponent<mapRules>().laps)
+            {
+                bIfDriving = false;
+            }
+
+        }
+
+        if (bIfDriving)
+        {
+            this.GetComponent<racerStat>().SetControlPoint(allControlPoints);
+            map.GetComponent<mapRules>().CheckPositions();
         }
     }
-
 }

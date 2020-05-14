@@ -16,11 +16,13 @@ public class AI_Controller : MonoBehaviour
     public float speed = 13f;
     public float torqueForce = 400f;
     public float roadStickness = 1.0f;
-    int index = 1;
+    int allControlPoints = 1;
+    int currentControlPoints = 1;
     int position = -1;
     Rigidbody2D rb;
     float dirNum;
     int direction = 0;
+    bool bIfDriving = true;
     int lap = 1;
 
     void Start()
@@ -29,6 +31,7 @@ public class AI_Controller : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
+        this.GetComponent<racerStat>().SetName(this.name);
     }
 
     // Update is called once per frame
@@ -42,84 +45,87 @@ public class AI_Controller : MonoBehaviour
         Vector3 heading = target.position - transform.position;
         dirNum = AngleDir(transform.forward, heading, transform.up);
 
-        float driftFactor = driftFactorSticky;
-
-        if (RightVelocity().magnitude > maxStickyVelocity)
+        if (bIfDriving)
         {
-            driftFactor = driftFactorSlippy;
-        }
+            float driftFactor = driftFactorSticky;
 
-        if (DetectObstacles())
-        {
-            rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
-
-            if ( direction == 0 )
+            if (RightVelocity().magnitude > maxStickyVelocity)
             {
-                rb.angularVelocity = 200f;
-                rb.AddForce(transform.up * speed * 2f);
-            }
-            else if( direction == 1 )
-            {
-                rb.angularVelocity = -200f;
-                rb.AddForce(transform.up * speed * 2f);
-            }
-            else if( direction == -1 )
-            {
-                rb.angularVelocity = 100f;
-                rb.AddForce(transform.up * speed * 2f);
-
-            }
-            else if( direction == -2 )
-            {
-                rb.angularVelocity = -100f;
-                rb.AddForce(transform.up * speed * 2f);
+                driftFactor = driftFactorSlippy;
             }
 
-        }
-        else
-        {
-            rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
+            if (DetectObstacles())
+            {
+                rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
 
-            if (dirNum == 1)
-            {
-                rb.angularVelocity = 200f * (-1);
-            }
-            else if (dirNum == -1)
-            {
-                rb.angularVelocity = 200f;
+                if (direction == 0)
+                {
+                    rb.angularVelocity = 200f;
+                    rb.AddForce(transform.up * speed * 2f);
+                }
+                else if (direction == 1)
+                {
+                    rb.angularVelocity = -200f;
+                    rb.AddForce(transform.up * speed * 2f);
+                }
+                else if (direction == -1)
+                {
+                    rb.angularVelocity = 100f;
+                    rb.AddForce(transform.up * speed * 2f);
+
+                }
+                else if (direction == -2)
+                {
+                    rb.angularVelocity = -100f;
+                    rb.AddForce(transform.up * speed * 2f);
+                }
+
             }
             else
             {
-                rb.angularVelocity = 0f;
+                rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
+
+                if (dirNum == 1)
+                {
+                    rb.angularVelocity = 200f * (-1);
+                }
+                else if (dirNum == -1)
+                {
+                    rb.angularVelocity = 200f;
+                }
+                else
+                {
+                    rb.angularVelocity = 0f;
+                }
             }
+
+            rb.AddForce(transform.up * speed * 2f);
+
+
+            /*if (Vector2.Distance(transform.position, target.position) < 2f)
+            {
+                string brakes;
+                if( index == 0 )
+                {
+                    brakes = "controlPoint";
+                }
+                else
+                {
+                    brakes = "controlPoint (" + index.ToString() + ")";
+                }
+
+                target = GameObject.Find(brakes).GetComponent<Transform>();
+
+                if (index == 10)
+                {
+                    index = 0;
+                }
+                else
+                {
+                    index++;
+                }
+            } */
         }
-
-        rb.AddForce(transform.up * speed * 2f);
-
-
-        /*if (Vector2.Distance(transform.position, target.position) < 2f)
-        {
-            string brakes;
-            if( index == 0 )
-            {
-                brakes = "controlPoint";
-            }
-            else
-            {
-                brakes = "controlPoint (" + index.ToString() + ")";
-            }
-
-            target = GameObject.Find(brakes).GetComponent<Transform>();
-
-            if (index == 10)
-            {
-                index = 0;
-            }
-            else
-            {
-                index++;
-            }
-        } */
     }
 
     private bool DetectObstacles()
@@ -265,26 +271,38 @@ public class AI_Controller : MonoBehaviour
         if ( other.gameObject.name == target.name )
         {
             string brakes;
-            if (index == 0)
+            if (currentControlPoints == 0)
             {
                 brakes = "controlPoint";
             }
             else
             {
-                brakes = "controlPoint (" + index.ToString() + ")";
+                brakes = "controlPoint (" + currentControlPoints.ToString() + ")";
             }
 
             target = GameObject.Find(brakes).GetComponent<Transform>();
 
-            if (index == 15)
+            if ( currentControlPoints == 15 )
             {
-                index = 0;
+                currentControlPoints = 0;
+                lap++;
             }
             else
             {
-                index++;
+                currentControlPoints++;
+                allControlPoints++;
+            }
+
+            if (lap > map.GetComponent<mapRules>().laps)
+            {
+                bIfDriving = false;
+            }
+
+            if (bIfDriving)
+            {
+                this.GetComponent<racerStat>().SetControlPoint(allControlPoints);
+                map.GetComponent<mapRules>().CheckPositions();
             }
         }
     }
-
 }
