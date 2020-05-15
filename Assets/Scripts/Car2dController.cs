@@ -21,6 +21,8 @@ public class Car2dController : MonoBehaviour
     int position = -1;
     int index = 0;
     int lap = 1;
+    int amountOfControls = 0;
+
     bool bIfDriving = true;
 
     // Start is called before the first frame update
@@ -30,6 +32,7 @@ public class Car2dController : MonoBehaviour
 
         map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
         this.GetComponent<racerStat>().SetName(this.name);
+        amountOfControls = GameObject.Find("path").transform.childCount;
     }
 
     // Update is called once per frame
@@ -98,7 +101,7 @@ public class Car2dController : MonoBehaviour
 
             target = GameObject.Find(brakes).GetComponent<Transform>();
 
-            if (currentControlPoints == 15)
+            if (currentControlPoints == amountOfControls-1)
             {
                 currentControlPoints = 0;
                 lap++;
@@ -119,7 +122,11 @@ public class Car2dController : MonoBehaviour
         if (bIfDriving)
         {
             this.GetComponent<racerStat>().SetControlPoint(allControlPoints);
-            map.GetComponent<mapRules>().CheckPositions();
         }
+    }
+
+    public int GetLaps()
+    {
+        return lap;
     }
 }

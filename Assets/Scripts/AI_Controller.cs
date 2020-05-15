@@ -301,7 +301,6 @@ public class AI_Controller : MonoBehaviour
             if (bIfDriving)
             {
                 this.GetComponent<racerStat>().SetControlPoint(allControlPoints);
-                map.GetComponent<mapRules>().CheckPositions();
             }
         }
     }
