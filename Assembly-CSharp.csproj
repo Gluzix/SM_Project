@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\RoadTrigger.cs" />
     <Compile Include="Assets\Scripts\mapRules.cs" />
+    <Compile Include="Assets\Scripts\racerStat.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\HSPackages\InfiniteGround\Documentation\ReadMe.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
