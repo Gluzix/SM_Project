@@ -28,11 +28,13 @@ public class Car2dController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        this.GetComponent<SpriteRenderer>().sprite = MainMenu.currentStaticSprite;
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
 
         map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
         this.GetComponent<racerStat>().SetName(this.name);
         amountOfControls = GameObject.Find("path").transform.childCount;
+
     }
 
     // Update is called once per frame
