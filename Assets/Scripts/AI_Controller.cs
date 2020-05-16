@@ -18,12 +18,12 @@ public class AI_Controller : MonoBehaviour
     public float roadStickness = 1.0f;
     int allControlPoints = 1;
     int currentControlPoints = 1;
-    int position = -1;
     Rigidbody2D rb;
     float dirNum;
     int direction = 0;
     bool bIfDriving = true;
     int lap = 1;
+    int amountOfControls = 0;
 
     void Start()
     {
@@ -32,6 +32,7 @@ public class AI_Controller : MonoBehaviour
 
         map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
         this.GetComponent<racerStat>().SetName(this.name);
+        amountOfControls = GameObject.Find("path").transform.childCount;
     }
 
     // Update is called once per frame
@@ -282,7 +283,7 @@ public class AI_Controller : MonoBehaviour
 
             target = GameObject.Find(brakes).GetComponent<Transform>();
 
-            if ( currentControlPoints == 15 )
+            if ( currentControlPoints == amountOfControls-1 )
             {
                 currentControlPoints = 0;
                 lap++;
