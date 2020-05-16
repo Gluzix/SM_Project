@@ -18,7 +18,6 @@ public class AI_Controller : MonoBehaviour
     public float roadStickness = 1.0f;
     int allControlPoints = 1;
     int currentControlPoints = 1;
-    int position = -1;
     Rigidbody2D rb;
     float dirNum;
     int direction = 0;

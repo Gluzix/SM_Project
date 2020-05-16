@@ -25,19 +25,6 @@ public class mapRules : MonoBehaviour
 
     public void CheckPositions()
     {
-        /*for ( int i=0; i<racerPositions.Count; i++)
-        {
-            for ( int j = racerPositions.Count-1; j>=0; j--)
-            {
-                if( racerPositions[i].GetComponent<racerStat>().GetControlPointNumber() > racerPositions[j].GetComponent<racerStat>().GetControlPointNumber() )
-                {
-                    GameObject temp = racerPositions[j];
-                    racerPositions[j] = racerPositions[i];
-                    racerPositions[i] = temp;
-                }
-            }
-        }*/
-
         racerPositions.Sort( SortByCheckpoints );
 
         int currentPlayerLap = racer.GetComponent<Car2dController>().GetLaps();

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class Car2dController : MonoBehaviour
@@ -7,6 +8,8 @@ public class Car2dController : MonoBehaviour
     //zmienna speedForce określa jaka siła zostanie dodana do wektora up
     Transform target;
     public GameObject map;
+    GameObject raceMenu;
+    public static bool gameIsPaused;
     public float speedForce = 10f;
     public float brakeForce = -50f;
     public float torqueForce = 400f;
@@ -18,8 +21,6 @@ public class Car2dController : MonoBehaviour
     public float roadStickness = 1.0f;
     int allControlPoints = 1;
     int currentControlPoints = 1;
-    int position = -1;
-    int index = 0;
     int lap = 1;
     int amountOfControls = 0;
 
@@ -28,19 +29,39 @@ public class Car2dController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.GetComponent<SpriteRenderer>().sprite = MainMenu.currentStaticSprite;
+        this.GetComponent<SpriteRenderer>().sprite = SelectionMenu.currentStaticSprite;
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
-
         map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
         this.GetComponent<racerStat>().SetName(this.name);
         amountOfControls = GameObject.Find("path").transform.childCount;
-
+        raceMenu = GameObject.Find("RaceMenu");
+        raceMenu.SetActive(false);
+        Time.timeScale = 1;
+        gameIsPaused = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-          
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gameIsPaused = !gameIsPaused;
+            PauseGame();
+        }
+    }
+
+    void PauseGame()
+    {
+        if (gameIsPaused)
+        {
+            Time.timeScale = 0f;
+            raceMenu.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            raceMenu.SetActive(false);
+        }
     }
 
     void FixedUpdate()
@@ -68,6 +89,7 @@ public class Car2dController : MonoBehaviour
             {
                 rb.AddForce(transform.up * brakeForce);
             }
+
 
             float tf = Mathf.Lerp(0, torqueForce, rb.velocity.magnitude / 4);
 
@@ -117,6 +139,7 @@ public class Car2dController : MonoBehaviour
             if ( lap > map.GetComponent<mapRules>().laps)
             {
                 bIfDriving = false;
+                raceMenu.SetActive(true);
             }
 
         }
