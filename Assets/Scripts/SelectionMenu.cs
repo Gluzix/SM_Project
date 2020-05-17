@@ -10,12 +10,27 @@ public class SelectionMenu : MonoBehaviour
     private int currentCarIndex = 0;
     Sprite[] carSprites;
     Sprite[] trackSprites;
+    GameObject carName;
+    GameObject carBitmap;
+    GameObject trackName;
+    GameObject trackBitmap;
     public static Sprite currentStaticSprite;
 
     void Start()
     {
+        carBitmap = GameObject.Find("CarBitmap");
+        carName = GameObject.Find("CarName");
+        trackBitmap = GameObject.Find("TrackBitmap");
+        trackName = GameObject.Find("TrackName");
         trackSprites = Resources.LoadAll<Sprite>("RaceTracks");
         carSprites = Resources.LoadAll<Sprite>("Cars");
+
+        currentStaticSprite = carSprites[0];
+
+        trackName.GetComponent<TMPro.TextMeshProUGUI>().text = trackSprites[currentTrackIndex].name;
+        carName.GetComponent<TMPro.TextMeshProUGUI>().text = carSprites[currentCarIndex].name;
+        carBitmap.GetComponent<Image>().sprite = carSprites[currentCarIndex];
+        trackBitmap.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
     }
 
     public void PlayGame()
@@ -70,18 +85,14 @@ public class SelectionMenu : MonoBehaviour
 
     private void ChangeTrack()
     {
-        GameObject track = GameObject.Find("TrackBitmap");
-        GameObject name = GameObject.Find("TrackName");
-        name.GetComponent<TMPro.TextMeshProUGUI>().text = trackSprites[currentTrackIndex].name;
-        track.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
+        trackName.GetComponent<TMPro.TextMeshProUGUI>().text = trackSprites[currentTrackIndex].name;
+        trackBitmap.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
     }
 
     private void ChangeCar()
     {
-        GameObject car = GameObject.Find("CarBitmap");
-        GameObject name = GameObject.Find("CarName");
-        name.GetComponent<TMPro.TextMeshProUGUI>().text = carSprites[currentCarIndex].name;
-        car.GetComponent<Image>().sprite = carSprites[currentCarIndex];
+        carName.GetComponent<TMPro.TextMeshProUGUI>().text = carSprites[currentCarIndex].name;
+        carBitmap.GetComponent<Image>().sprite = carSprites[currentCarIndex];
         currentStaticSprite = carSprites[currentCarIndex];
     }
 }

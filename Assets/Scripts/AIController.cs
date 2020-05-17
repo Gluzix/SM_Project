@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AI_Controller : MonoBehaviour
+public class AIController : MonoBehaviour
 {
     // Start is called before the first frame update
     Transform target;
@@ -27,12 +27,45 @@ public class AI_Controller : MonoBehaviour
 
     void Start()
     {
+        GenerateName();
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
-
-        map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
-        this.GetComponent<racerStat>().SetName(this.name);
+        map.GetComponent<MapRules>().racerPositions.Add(this.gameObject);
+        this.GetComponent<RacerStat>().SetName(this.name);
         amountOfControls = GameObject.Find("path").transform.childCount;
+    }
+
+    void GenerateName()
+    {
+        Transform racersObject = GameObject.Find("Racers").transform;
+        int childCounter = racersObject.childCount;
+        int currentObjectIndex = 0;
+
+        for (int i = 0; i < childCounter; i++)
+        {
+            if (racersObject.GetChild(i).name == this.name)
+            {
+                currentObjectIndex = i;
+            }
+        }
+        RandomizeName();
+        for (int i = 0; i < childCounter; i++)
+        {
+            if (currentObjectIndex == i)
+                continue;
+
+            if (racersObject.GetChild(i).name == this.name)
+            {
+                i = 0;
+                RandomizeName();
+            }
+        }
+    }
+
+    void RandomizeName()
+    {
+        int number = Random.Range(0, GlobalVars.racerNames.Length - 1);
+        this.name = GlobalVars.racerNames[number];
     }
 
     // Update is called once per frame
@@ -294,14 +327,14 @@ public class AI_Controller : MonoBehaviour
                 allControlPoints++;
             }
 
-            if (lap > map.GetComponent<mapRules>().laps)
+            if (lap > map.GetComponent<MapRules>().laps)
             {
                 bIfDriving = false;
             }
 
             if (bIfDriving)
             {
-                this.GetComponent<racerStat>().SetControlPoint(allControlPoints);
+                this.GetComponent<RacerStat>().SetControlPoint(allControlPoints);
             }
         }
     }

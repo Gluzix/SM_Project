@@ -14,7 +14,7 @@ public class RaceMenu : MonoBehaviour
     {
         Time.timeScale = 1;
         gameObject.SetActive(false);
-        Car2dController.gameIsPaused = false;
+        PlayerController.gameIsPaused = false;
     }
 
     public void GoToMenu()

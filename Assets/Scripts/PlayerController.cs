@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class Car2dController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     //zmienna speedForce określa jaka siła zostanie dodana do wektora up
     Transform target;
@@ -31,8 +31,8 @@ public class Car2dController : MonoBehaviour
     {
         this.GetComponent<SpriteRenderer>().sprite = SelectionMenu.currentStaticSprite;
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
-        map.GetComponent<mapRules>().racerPositions.Add(this.gameObject);
-        this.GetComponent<racerStat>().SetName(this.name);
+        map.GetComponent<MapRules>().racerPositions.Add(this.gameObject);
+        this.GetComponent<RacerStat>().SetName(this.name);
         amountOfControls = GameObject.Find("path").transform.childCount;
         raceMenu = GameObject.Find("RaceMenu");
         raceMenu.SetActive(false);
@@ -136,7 +136,7 @@ public class Car2dController : MonoBehaviour
                 allControlPoints++;
             }
 
-            if ( lap > map.GetComponent<mapRules>().laps)
+            if ( lap > map.GetComponent<MapRules>().laps)
             {
                 bIfDriving = false;
                 raceMenu.SetActive(true);
@@ -146,7 +146,7 @@ public class Car2dController : MonoBehaviour
 
         if (bIfDriving)
         {
-            this.GetComponent<racerStat>().SetControlPoint(allControlPoints);
+            this.GetComponent<RacerStat>().SetControlPoint(allControlPoints);
         }
     }
 
