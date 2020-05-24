@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     public GameObject map;
     GameObject raceMenu;
     public static bool gameIsPaused;
-    public float speedForce = 10f;
+
+    /*public float speedForce = 10f;
     public float brakeForce = -50f;
     public float torqueForce = 400f;
     public float driftFactorSticky = 0.9f;
@@ -18,18 +19,20 @@ public class PlayerController : MonoBehaviour
     public float maxStickyVelocity = 2.5f;
     public float minSlippyVelocity = 1.5f;
     public float speedTuning = 3.0f;
-    public float roadStickness = 1.0f;
+    public float roadStickness = 1.0f;*/
+
     int allControlPoints = 1;
     int currentControlPoints = 1;
     int lap = 1;
     int amountOfControls = 0;
-
     bool bIfDriving = true;
+    private Cars currentCar;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.GetComponent<SpriteRenderer>().sprite = SelectionMenu.currentStaticSprite;
+        currentCar = SelectionMenu.currentCar;
+        this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>( "Cars/"+currentCar.SpriteName );
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
         map.GetComponent<MapRules>().racerPositions.Add(this.gameObject);
         this.GetComponent<RacerStat>().SetName(this.name);
@@ -71,27 +74,27 @@ public class PlayerController : MonoBehaviour
         if ( bIfDriving )
         {
 
-            float driftFactor = driftFactorSticky;
+            float driftFactor = currentCar.driftFactorSticky;
 
-            if (RightVelocity().magnitude > maxStickyVelocity)
+            if (RightVelocity().magnitude > currentCar.maxStickyVelocity)
             {
-                driftFactor = driftFactorSlippy;
+                driftFactor = currentCar.driftFactorSlippy;
             }
 
-            rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
+            rb.velocity = ForwardVelocity() + RightVelocity() * currentCar.driftFactorSlippy;
 
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                rb.AddForce(transform.up * speedForce * speedTuning * roadStickness);
+                rb.AddForce(transform.up * currentCar.speedForce * currentCar.speedTuning * currentCar.roadStickness);
             }
 
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                rb.AddForce(transform.up * brakeForce);
+                rb.AddForce(transform.up * currentCar.brakeForce);
             }
 
 
-            float tf = Mathf.Lerp(0, torqueForce, rb.velocity.magnitude / 4);
+            float tf = Mathf.Lerp(0, currentCar.torqueForce, rb.velocity.magnitude / 4);
 
             rb.angularVelocity = Input.GetAxis("Horizontal") * tf;
 
@@ -153,5 +156,10 @@ public class PlayerController : MonoBehaviour
     public int GetLaps()
     {
         return lap;
+    }
+
+    public Cars GetCurrentCar()
+    {
+        return currentCar;
     }
 }

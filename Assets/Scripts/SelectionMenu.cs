@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
@@ -8,29 +9,37 @@ public class SelectionMenu : MonoBehaviour
 {
     private int currentTrackIndex = 0;
     private int currentCarIndex = 0;
-    Sprite[] carSprites;
+    //Sprite[] carSprites;
     Sprite[] trackSprites;
     GameObject carName;
     GameObject carBitmap;
     GameObject trackName;
     GameObject trackBitmap;
-    public static Sprite currentStaticSprite;
+    public static CarListObject carList;
+    public static Cars currentCar;
+    //public static List<GameObject> carList;
 
     void Start()
     {
+        string json = File.ReadAllText( Application.dataPath + "/cars.json" );
+        carList = JsonUtility.FromJson<CarListObject>(json);
+
         carBitmap = GameObject.Find("CarBitmap");
         carName = GameObject.Find("CarName");
         trackBitmap = GameObject.Find("TrackBitmap");
         trackName = GameObject.Find("TrackName");
         trackSprites = Resources.LoadAll<Sprite>("RaceTracks");
-        carSprites = Resources.LoadAll<Sprite>("Cars");
+        //carSprites = Resources.LoadAll<Sprite>("Cars");
 
-        currentStaticSprite = carSprites[0];
+        //currentStaticSprite = carSprites[0];
 
         trackName.GetComponent<TMPro.TextMeshProUGUI>().text = trackSprites[currentTrackIndex].name;
-        carName.GetComponent<TMPro.TextMeshProUGUI>().text = carSprites[currentCarIndex].name;
-        carBitmap.GetComponent<Image>().sprite = carSprites[currentCarIndex];
+        //carName.GetComponent<TMPro.TextMeshProUGUI>().text = carSprites[currentCarIndex].name;
+        carBitmap.GetComponent<Image>().sprite = Resources.Load<Sprite>("Cars/" + carList.carList[currentCarIndex].SpriteName);
+        carName.GetComponent<TMPro.TextMeshProUGUI>().text = carList.carList[currentCarIndex].Name;
         trackBitmap.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
+        currentCar = carList.carList[currentCarIndex];
+        Debug.Log(carList.carList[currentCarIndex].SpriteName);
     }
 
     public void PlayGame()
@@ -66,7 +75,7 @@ public class SelectionMenu : MonoBehaviour
     public void CarRightClick()
     {
         currentCarIndex++;
-        if (currentCarIndex > carSprites.Length - 1)
+        if (currentCarIndex > carList.carList.Count - 1)
         {
             currentCarIndex = 0;
         }
@@ -78,7 +87,7 @@ public class SelectionMenu : MonoBehaviour
         currentCarIndex--;
         if (currentCarIndex < 0)
         {
-            currentCarIndex = carSprites.Length - 1;
+            currentCarIndex = carList.carList.Count - 1;
         }
         ChangeCar();
     }
@@ -91,8 +100,8 @@ public class SelectionMenu : MonoBehaviour
 
     private void ChangeCar()
     {
-        carName.GetComponent<TMPro.TextMeshProUGUI>().text = carSprites[currentCarIndex].name;
-        carBitmap.GetComponent<Image>().sprite = carSprites[currentCarIndex];
-        currentStaticSprite = carSprites[currentCarIndex];
+        carBitmap.GetComponent<Image>().sprite = Resources.Load<Sprite>( "Cars/"+carList.carList[currentCarIndex].SpriteName );
+        carName.GetComponent<TMPro.TextMeshProUGUI>().text = carList.carList[currentCarIndex].Name;
+        currentCar = carList.carList[currentCarIndex];
     }
 }

@@ -8,7 +8,7 @@ public class RoadTrigger : MonoBehaviour
     {
         if(other.gameObject.name == "Player")
         {
-            other.gameObject.GetComponent<PlayerController>().roadStickness = 0.5f;
+            other.gameObject.GetComponent<PlayerController>().GetCurrentCar().roadStickness = 0.5f;
         }
     }
 
@@ -16,7 +16,7 @@ public class RoadTrigger : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            other.gameObject.GetComponent<PlayerController>().roadStickness = 1.0f;
+            other.gameObject.GetComponent<PlayerController>().GetCurrentCar().roadStickness = 1.0f;
         }
     }
 }
