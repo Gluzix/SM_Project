@@ -48,7 +48,7 @@
         {
             "SpriteName":"Forari_Penzo_BLUE",
             "Name":"Forari Penzo",
-            "speedForce": 10.0,
+            "speedForce": 20.0,
             "brakeForce": -80.0,
             "torqueForce": 700.0,
             "driftFactorSticky": 0.9,
@@ -63,7 +63,7 @@
         {
             "SpriteName":"Forari_Penzo_RED",
             "Name":"Forari Penzo",
-            "speedForce": 10.0,
+            "speedForce": 20.0,
             "brakeForce": -80.0,
             "torqueForce": 700.0,
             "driftFactorSticky": 0.9,
@@ -78,7 +78,7 @@
         {
             "SpriteName":"Forari_Penzo_YELLOW",
             "Name":"Forari Penzo",
-            "speedForce": 10.0,
+            "speedForce": 20.0,
             "brakeForce": -80.0,
             "torqueForce": 700.0,
             "driftFactorSticky": 0.9,
@@ -93,7 +93,7 @@
         {
             "SpriteName":"Laborgini_Muraligo_BLACK",
             "Name":"Laborgini Muraligo",
-            "speedForce": 10.0,
+            "speedForce": 18.0,
             "brakeForce": -70.0,
             "torqueForce": 550.0,
             "driftFactorSticky": 0.9,
@@ -108,7 +108,7 @@
         {
             "SpriteName":"Laborgini_Muraligo_RED",
             "Name":"Laborgini Muraligo",
-            "speedForce": 10.0,
+            "speedForce": 18.0,
             "brakeForce": -70.0,
             "torqueForce": 550.0,
             "driftFactorSticky": 0.9,
@@ -123,7 +123,7 @@
         {
             "SpriteName":"Laborgini_Muraligo_YELLOW",
             "Name":"Laborgini Muraligo",
-            "speedForce": 10.0,
+            "speedForce": 18.0,
             "brakeForce": -70.0,
             "torqueForce": 550.0,
             "driftFactorSticky": 0.9,
@@ -138,7 +138,7 @@
         {
             "SpriteName":"Laborgini_Valuardo_YELLOW",
             "Name":"Laborgini Valuardo",
-            "speedForce": 10.0,
+            "speedForce": 16.0,
             "brakeForce": -50.0,
             "torqueForce": 400.0,
             "driftFactorSticky": 0.9,
@@ -153,7 +153,7 @@
         {
             "SpriteName":"Laborgini_Valuardo_BROWN",
             "Name":"Laborgini Valuardo",
-            "speedForce": 10.0,
+            "speedForce": 16.0,
             "brakeForce": -50.0,
             "torqueForce": 400.0,
             "driftFactorSticky": 0.9,
@@ -168,7 +168,7 @@
         {
             "SpriteName":"Laborgini_Diabolos_WHITE",
             "Name":"Laborgini Diabolos",
-            "speedForce": 10.0,
+            "speedForce": 12.0,
             "brakeForce": -40.0,
             "torqueForce": 300.0,
             "driftFactorSticky": 0.9,
@@ -183,7 +183,7 @@
         {
             "SpriteName":"Laborgini_Diabolos_RED",
             "Name":"Laborgini Diabolos",
-            "speedForce": 10.0,
+            "speedForce": 12.0,
             "brakeForce": -40.0,
             "torqueForce": 300.0,
             "driftFactorSticky": 0.9,
@@ -198,7 +198,7 @@
         {
             "SpriteName":"Laborgini_Diabolos_YELLOW",
             "Name":"Laborgini Diabolos",
-            "speedForce": 10.0,
+            "speedForce": 12.0,
             "brakeForce": -40.0,
             "torqueForce": 300.0,
             "driftFactorSticky": 0.9,

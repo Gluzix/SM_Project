@@ -7,15 +7,15 @@ public class AIController : MonoBehaviour
     // Start is called before the first frame update
     Transform target;
     public GameObject map;
-    public float speedForce = 10f;
+    /*public float speedForce = 10f;
     public float brakeForce = -50f;
     public float driftFactorSticky = 0.9f;
     public float driftFactorSlippy = 0.6f;
     public float maxStickyVelocity = 100f;
     public float minSlippyVelocity = 100f;
-    public float speed = 13f;
     public float torqueForce = 400f;
-    public float roadStickness = 1.0f;
+    public float roadStickness = 1.0f;*/
+    private Cars currentCar;
     int allControlPoints = 1;
     int currentControlPoints = 1;
     Rigidbody2D rb;
@@ -28,6 +28,8 @@ public class AIController : MonoBehaviour
     void Start()
     {
         GenerateName();
+        RandomizeCar();
+        this.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Cars/" + currentCar.SpriteName);
         target = GameObject.Find("controlPoint").GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
         map.GetComponent<MapRules>().racerPositions.Add(this.gameObject);
@@ -68,10 +70,16 @@ public class AIController : MonoBehaviour
         this.name = GlobalVars.racerNames[number];
     }
 
+    void RandomizeCar()
+    {
+        int number = Random.Range(0, SelectionMenu.carList.carList.Count - 1);
+        currentCar = SelectionMenu.carList.carList[number];
+    }
+
     // Update is called once per frame
     void Update()
     {
-
+        int number = Random.Range(0, GlobalVars.racerNames.Length - 1);
     }
 
     void FixedUpdate()
@@ -81,43 +89,43 @@ public class AIController : MonoBehaviour
 
         if (bIfDriving)
         {
-            float driftFactor = driftFactorSticky;
+            float driftFactor = Difficulty.driftFactorSticky;
 
-            if (RightVelocity().magnitude > maxStickyVelocity)
+            if ( RightVelocity().magnitude > (currentCar.maxStickyVelocity+Difficulty.maxStickyVelocity) )
             {
-                driftFactor = driftFactorSlippy;
+                driftFactor = Difficulty.driftFactorSlippy;
             }
 
             if (DetectObstacles())
             {
-                rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
+                rb.velocity = ForwardVelocity() + RightVelocity() * Difficulty.driftFactorSlippy;
 
                 if (direction == 0)
                 {
                     rb.angularVelocity = 200f;
-                    rb.AddForce(transform.up * speed * 2f);
+                    rb.AddForce(transform.up * (Difficulty.speed + currentCar.torqueForce / 500));
                 }
                 else if (direction == 1)
                 {
                     rb.angularVelocity = -200f;
-                    rb.AddForce(transform.up * speed * 2f);
+                    rb.AddForce(transform.up * (Difficulty.speed + currentCar.torqueForce / 500));
                 }
                 else if (direction == -1)
                 {
                     rb.angularVelocity = 100f;
-                    rb.AddForce(transform.up * speed * 2f);
+                    rb.AddForce(transform.up * (Difficulty.speed + currentCar.torqueForce / 500));
 
                 }
                 else if (direction == -2)
                 {
                     rb.angularVelocity = -100f;
-                    rb.AddForce(transform.up * speed * 2f);
+                    rb.AddForce(transform.up * (Difficulty.speed + currentCar.torqueForce / 500));
                 }
 
             }
             else
             {
-                rb.velocity = ForwardVelocity() + RightVelocity() * driftFactorSlippy;
+                rb.velocity = ForwardVelocity() + RightVelocity() * Difficulty.driftFactorSlippy;
 
                 if (dirNum == 1)
                 {
@@ -133,7 +141,7 @@ public class AIController : MonoBehaviour
                 }
             }
 
-            rb.AddForce(transform.up * speed * 2f);
+            rb.AddForce(transform.up * ( Difficulty.speed+currentCar.torqueForce / 500) );
 
 
             /*if (Vector2.Distance(transform.position, target.position) < 2f)

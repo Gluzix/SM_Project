@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\AIController.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\Cars.cs" />
+    <Compile Include="Assets\Scripts\Difficulty.cs" />
     <Compile Include="Assets\Scripts\GlobalVars.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MapRules.cs" />

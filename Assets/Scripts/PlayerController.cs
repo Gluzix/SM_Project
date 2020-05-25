@@ -10,23 +10,13 @@ public class PlayerController : MonoBehaviour
     public GameObject map;
     GameObject raceMenu;
     public static bool gameIsPaused;
-
-    /*public float speedForce = 10f;
-    public float brakeForce = -50f;
-    public float torqueForce = 400f;
-    public float driftFactorSticky = 0.9f;
-    public float driftFactorSlippy = 1f;
-    public float maxStickyVelocity = 2.5f;
-    public float minSlippyVelocity = 1.5f;
-    public float speedTuning = 3.0f;
-    public float roadStickness = 1.0f;*/
-
     int allControlPoints = 1;
     int currentControlPoints = 1;
     int lap = 1;
     int amountOfControls = 0;
     bool bIfDriving = true;
     private Cars currentCar;
+    public static int cash = 300000;
 
     // Start is called before the first frame update
     void Start()
