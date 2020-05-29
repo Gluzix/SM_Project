@@ -25,7 +25,6 @@ public class SelectionMenu : MonoBehaviour
     public static CarListObject carList;
     public static Cars currentCar;
     public static List<Cars> playerCars;
-    //public static List<GameObject> carList;
 
     void Start()
     {
@@ -106,7 +105,7 @@ public class SelectionMenu : MonoBehaviour
 
     public void Back()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2);
     }
 
     public void BuyCar()
