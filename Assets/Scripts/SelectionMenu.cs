@@ -12,7 +12,6 @@ public class SelectionMenu : MonoBehaviour
     private float bestSpeed = 0f;
     private float bestHandling = 0f;
     private float bestBraking = 0f;
-    //Sprite[] carSprites;
     Sprite[] trackSprites;
     GameObject carName;
     GameObject carBitmap;
@@ -25,7 +24,6 @@ public class SelectionMenu : MonoBehaviour
     public static CarListObject carList;
     public static Cars currentCar;
     public static List<Cars> playerCars;
-    //public static List<GameObject> carList;
 
     void Start()
     {
@@ -50,7 +48,7 @@ public class SelectionMenu : MonoBehaviour
         trackBitmap.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
         cashText.GetComponent<TMPro.TextMeshProUGUI>().text = "Cash: " + PlayerController.cash;
         currentCar = carList.carList[currentCarIndex];
-        Difficulty.SetDifficulty("Unbeatable");
+        Difficulty.SetDifficulty( OptionsMenu.DifficultyLevel );
         IfPlayerHasCurrentCar();
         SetCarStatistics();
     }
@@ -106,7 +104,7 @@ public class SelectionMenu : MonoBehaviour
 
     public void Back()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2);
     }
 
     public void BuyCar()

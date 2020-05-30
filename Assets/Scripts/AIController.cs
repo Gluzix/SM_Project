@@ -4,17 +4,8 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
-    // Start is called before the first frame update
     Transform target;
     public GameObject map;
-    /*public float speedForce = 10f;
-    public float brakeForce = -50f;
-    public float driftFactorSticky = 0.9f;
-    public float driftFactorSlippy = 0.6f;
-    public float maxStickyVelocity = 100f;
-    public float minSlippyVelocity = 100f;
-    public float torqueForce = 400f;
-    public float roadStickness = 1.0f;*/
     private Cars currentCar;
     int allControlPoints = 1;
     int currentControlPoints = 1;
