@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Road
   - Path
+  - GameMusic
   layers:
   - Default
   - TransparentFX
