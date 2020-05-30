@@ -48,7 +48,7 @@ public class SelectionMenu : MonoBehaviour
         trackBitmap.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
         cashText.GetComponent<TMPro.TextMeshProUGUI>().text = "Cash: " + PlayerController.cash;
         currentCar = carList.carList[currentCarIndex];
-        Difficulty.SetDifficulty("Medium");
+        Difficulty.SetDifficulty( OptionsMenu.DifficultyLevel );
         IfPlayerHasCurrentCar();
         SetCarStatistics();
     }
