@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\MenuMusicHolder.cs" />
     <Compile Include="Assets\Scripts\OptionsMenu.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\PlayerData.cs" />
     <Compile Include="Assets\Scripts\RaceMenu.cs" />
     <Compile Include="Assets\Scripts\RacerStat.cs" />
     <Compile Include="Assets\Scripts\RoadTrigger.cs" />

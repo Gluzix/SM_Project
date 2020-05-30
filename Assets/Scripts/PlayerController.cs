@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     int amountOfControls = 0;
     bool bIfDriving = true;
     private Cars currentCar;
-    public static int cash = 300000;
 
     // Start is called before the first frame update
     void Start()

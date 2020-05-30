@@ -9,4 +9,6 @@ public class GlobalVars : MonoBehaviour
                                             "Mordraq", "Mort", "Quasi", "Lorenzo",
                                             "Brown", "Fader", "Cole", "Ben",
                                             "Eddy","Loktar", "Tenti", "Brian"};
+    public static int playerMoney;
+    public static bool ifCarsAreLoaded = false;
 }
