@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class SelectionMenu : MonoBehaviour
 {
-    private int currentTrackIndex = 0;
+    static public int currentTrackIndex = 0;
+    static public int trackAmount = 0;
     private int currentCarIndex = 0;
     private float bestSpeed = 0f;
     private float bestHandling = 0f;
@@ -21,16 +22,23 @@ public class SelectionMenu : MonoBehaviour
     GameObject playButton;
     GameObject buyButton;
     GameObject cashText;
+    GameObject LockedText;
     public static CarListObject carList;
     public static Cars currentCar;
-    public static List<Cars> playerCars;
+    bool bIfMapIsOk;
+    bool bIfCarIsOk;
 
     void Start()
     {
-        playerCars = new List<Cars>();
         string json = File.ReadAllText( Application.dataPath + "/cars.json" );
         carList = JsonUtility.FromJson<CarListObject>(json);
         FindBestCarPerformance();
+
+        if ( !GlobalVars.ifCarsAreLoaded )
+        {
+            PlayerData.LoadGame();
+            GlobalVars.ifCarsAreLoaded = true;
+        }
 
         carBitmap = GameObject.Find("CarBitmap");
         carName = GameObject.Find("CarName");
@@ -41,16 +49,18 @@ public class SelectionMenu : MonoBehaviour
         trackSprites = Resources.LoadAll<Sprite>("RaceTracks");
         playButton = GameObject.Find("PlayButton");
         buyButton = GameObject.Find("BuyButton");
+        LockedText = GameObject.Find("Locked");
         trackName.GetComponent<TMPro.TextMeshProUGUI>().text = trackSprites[currentTrackIndex].name;
         carBitmap.GetComponent<Image>().sprite = Resources.Load<Sprite>("Cars/" + carList.carList[currentCarIndex].SpriteName);
         carName.GetComponent<TMPro.TextMeshProUGUI>().text = carList.carList[currentCarIndex].Name;
         carPrice.GetComponent<TMPro.TextMeshProUGUI>().text = "Price: " + carList.carList[currentCarIndex].points.ToString();
         trackBitmap.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
-        cashText.GetComponent<TMPro.TextMeshProUGUI>().text = "Cash: " + PlayerController.cash;
+        cashText.GetComponent<TMPro.TextMeshProUGUI>().text = "Cash: " + PlayerData.cash;
         currentCar = carList.carList[currentCarIndex];
         Difficulty.SetDifficulty( OptionsMenu.DifficultyLevel );
         IfPlayerHasCurrentCar();
         SetCarStatistics();
+        trackAmount = trackSprites.Length;
     }
 
     private void FindBestCarPerformance()
@@ -109,26 +119,51 @@ public class SelectionMenu : MonoBehaviour
 
     public void BuyCar()
     {
-        if ( carList.carList[currentCarIndex].points <= PlayerController.cash )
+        if ( carList.carList[currentCarIndex].points <= PlayerData.cash )
         {
-            PlayerController.cash -= carList.carList[currentCarIndex].points;
-            playerCars.Add(carList.carList[currentCarIndex]);
-            cashText.GetComponent<TMPro.TextMeshProUGUI>().text = "Cash: " + PlayerController.cash;
+            PlayerData.cash -= carList.carList[currentCarIndex].points;
+            PlayerData.playerCars.Add(carList.carList[currentCarIndex]);
+            cashText.GetComponent<TMPro.TextMeshProUGUI>().text = "Cash: " + PlayerData.cash;
             IfPlayerHasCurrentCar();
+            PlayerData.SaveGame();
         }
     }
 
     private void IfPlayerHasCurrentCar()
     {
-        if (playerCars.Contains(carList.carList[currentCarIndex]))
+        bool bIfCarFound = false;
+        for( int i=0; i<PlayerData.playerCars.Count; i++ )
         {
-            playButton.SetActive(true);
+            if (PlayerData.playerCars[i].SpriteName == carList.carList[currentCarIndex].SpriteName)
+            {
+                bIfCarFound = true;
+                break;
+            }
+        }
+
+        if ( bIfCarFound )
+        {
+            bIfCarIsOk = true;
             buyButton.SetActive(false);
         }
         else
         {
-            playButton.SetActive(false);
+            bIfCarIsOk = false;
             buyButton.SetActive(true);
+        }
+
+        UnlockPlayButton();
+    }
+
+    private void UnlockPlayButton()
+    {
+        if (bIfCarIsOk && bIfMapIsOk)
+        {
+            playButton.SetActive(true);
+        }
+        else
+        {
+            playButton.SetActive(false);
         }
     }
 
@@ -176,6 +211,21 @@ public class SelectionMenu : MonoBehaviour
     {
         trackName.GetComponent<TMPro.TextMeshProUGUI>().text = trackSprites[currentTrackIndex].name;
         trackBitmap.GetComponent<Image>().sprite = trackSprites[currentTrackIndex];
+        if( !PlayerData.unlockedLaps.Contains(trackSprites[currentTrackIndex].name) )
+        {
+            Color color = new Color(255, 255, 255, 0);
+            trackBitmap.GetComponent<Image>().color = color;
+            LockedText.SetActive(true);
+            bIfMapIsOk = false;
+        }
+        else
+        {
+            Color color = new Color(255, 255, 255, 1);
+            trackBitmap.GetComponent<Image>().color = color;
+            LockedText.SetActive(false);
+            bIfMapIsOk = true;
+        }
+        UnlockPlayButton();
     }
 
     private void ChangeCar()
