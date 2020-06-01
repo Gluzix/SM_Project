@@ -9,7 +9,7 @@ public class MapRules : MonoBehaviour
     GameObject positionsText;
     GameObject lapsText;
     public int laps = 3;
-    // Start is called before the first frame update
+
     void Start()
     {
         racer = GameObject.Find("Player");
@@ -17,7 +17,6 @@ public class MapRules : MonoBehaviour
         lapsText = GameObject.Find("Text (TMP)_2");
     }
 
-    // Update is called once per frame
     void Update()
     {
         CheckPositions();
@@ -43,6 +42,24 @@ public class MapRules : MonoBehaviour
         }
         positionsText.GetComponent<TMPro.TextMeshProUGUI>().text = posText;
         lapsText.GetComponent<TMPro.TextMeshProUGUI>().text = lapText;
+    }
+
+    public void PlayerPlace()
+    {
+        for( int i=0; i<racerPositions.Count; i++)
+        {
+            if( racerPositions[i].name == "Player" )
+            {
+                switch( i )
+                {
+                    case 0: PlayerData.cash += 25000; break;
+                    case 1: PlayerData.cash += 15000; break;
+                    case 2: PlayerData.cash += 5000; break;
+                    default: PlayerData.cash += 0; break;
+                }
+                break;
+            }
+        }
     }
 
     static int SortByCheckpoints(GameObject p1, GameObject p2)

@@ -128,10 +128,22 @@ public class PlayerController : MonoBehaviour
                 allControlPoints++;
             }
 
-            if ( lap > map.GetComponent<MapRules>().laps)
+            if ( lap > map.GetComponent<MapRules>().laps && bIfDriving )
             {
                 bIfDriving = false;
                 raceMenu.SetActive(true);
+                map.GetComponent<MapRules>().PlayerPlace();
+
+                string nextTrackName = "track_" + (SelectionMenu.currentTrackIndex + 2).ToString();
+                if ( SelectionMenu.currentTrackIndex < SelectionMenu.trackAmount-1 )
+                {
+                    if ( !PlayerData.unlockedLaps.Contains( nextTrackName ) )
+                    {
+                        PlayerData.unlockedLaps.Add( nextTrackName );
+                    }
+                }
+
+                PlayerData.SaveGame();
             }
 
         }
