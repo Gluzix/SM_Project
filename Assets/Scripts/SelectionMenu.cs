@@ -61,6 +61,21 @@ public class SelectionMenu : MonoBehaviour
         IfPlayerHasCurrentCar();
         SetCarStatistics();
         trackAmount = trackSprites.Length;
+
+        if (!PlayerData.unlockedLaps.Contains(trackSprites[currentTrackIndex].name))
+        {
+            Color color = new Color(255, 255, 255, 0);
+            trackBitmap.GetComponent<Image>().color = color;
+            LockedText.SetActive(true);
+            bIfMapIsOk = false;
+        }
+        else
+        {
+            Color color = new Color(255, 255, 255, 1);
+            trackBitmap.GetComponent<Image>().color = color;
+            LockedText.SetActive(false);
+            bIfMapIsOk = true;
+        }
     }
 
     private void FindBestCarPerformance()
