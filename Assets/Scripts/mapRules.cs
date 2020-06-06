@@ -44,22 +44,24 @@ public class MapRules : MonoBehaviour
         lapsText.GetComponent<TMPro.TextMeshProUGUI>().text = lapText;
     }
 
-    public void PlayerPlace()
+    public bool PlayerPlace()
     {
+        bool bIfUnlock = false;
         for( int i=0; i<racerPositions.Count; i++)
         {
             if( racerPositions[i].name == "Player" )
             {
                 switch( i )
                 {
-                    case 0: PlayerData.cash += 25000; break;
-                    case 1: PlayerData.cash += 15000; break;
-                    case 2: PlayerData.cash += 5000; break;
-                    default: PlayerData.cash += 0; break;
+                    case 0: PlayerData.cash += 25000; bIfUnlock = true; break;
+                    case 1: PlayerData.cash += 15000; bIfUnlock = true; break;
+                    case 2: PlayerData.cash += 5000; bIfUnlock = true; break;
+                    default: PlayerData.cash += 0; bIfUnlock = false; break;
                 }
                 break;
             }
         }
+        return bIfUnlock;
     }
 
     static int SortByCheckpoints(GameObject p1, GameObject p2)

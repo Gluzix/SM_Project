@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
+using System;
 
 public class SelectionMenu : MonoBehaviour
 {
@@ -47,6 +48,7 @@ public class SelectionMenu : MonoBehaviour
         trackName = GameObject.Find("TrackName");
         cashText = GameObject.Find("PlayerCashText");
         trackSprites = Resources.LoadAll<Sprite>("RaceTracks");
+        Array.Sort(trackSprites, SortByNames);
         playButton = GameObject.Find("PlayButton");
         buyButton = GameObject.Find("BuyButton");
         LockedText = GameObject.Find("Locked");
@@ -61,6 +63,21 @@ public class SelectionMenu : MonoBehaviour
         IfPlayerHasCurrentCar();
         SetCarStatistics();
         trackAmount = trackSprites.Length;
+
+        if (!PlayerData.unlockedLaps.Contains(trackSprites[currentTrackIndex].name))
+        {
+            Color color = new Color(255, 255, 255, 0);
+            trackBitmap.GetComponent<Image>().color = color;
+            LockedText.SetActive(true);
+            bIfMapIsOk = false;
+        }
+        else
+        {
+            Color color = new Color(255, 255, 255, 1);
+            trackBitmap.GetComponent<Image>().color = color;
+            LockedText.SetActive(false);
+            bIfMapIsOk = true;
+        }
     }
 
     private void FindBestCarPerformance()
@@ -236,5 +253,27 @@ public class SelectionMenu : MonoBehaviour
         currentCar = carList.carList[currentCarIndex];
         SetCarStatistics();
         IfPlayerHasCurrentCar();
+    }
+
+    static int SortByNames(Sprite p1, Sprite p2)
+    {
+        string name = p1.name;
+        int value = GetNumberFromString(name);
+        name = p2.name;
+        int value_2 = GetNumberFromString(name);
+        return value.CompareTo(value_2);
+    }
+
+    static int GetNumberFromString(string name)
+    {
+        string number = string.Empty;
+        for (int i = 0; i < name.Length; i++)
+        {
+            if (char.IsDigit(name[i]))
+            {
+                number += name[i];
+            }
+        }
+        return int.Parse(number);
     }
 }
