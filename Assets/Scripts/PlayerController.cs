@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     int amountOfControls = 0;
     bool bIfDriving = true;
     private Cars currentCar;
+    float pitch = 1f;
+    bool throttle = false;
 
     // Start is called before the first frame update
     void Start()
@@ -75,11 +77,24 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 rb.AddForce(transform.up * currentCar.speedForce * currentCar.speedTuning * currentCar.roadStickness);
+                throttle = true;
+                if (pitch < 3f)
+                {
+                    pitch += 0.05f;
+                }
+            }
+            else
+            {
+                throttle = false;
             }
 
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 rb.AddForce(transform.up * currentCar.brakeForce);
+                if (pitch > 1f)
+                {
+                    pitch -= 0.10f;
+                }
             }
 
 
@@ -88,7 +103,14 @@ public class PlayerController : MonoBehaviour
             rb.angularVelocity = Input.GetAxis("Horizontal") * tf;
 
         }
-       
+
+        if(pitch>1f && !throttle)
+        {
+            pitch -= 0.05f;
+        }
+
+        EngineSound();
+
     }
 
     Vector2 ForwardVelocity()
@@ -132,12 +154,12 @@ public class PlayerController : MonoBehaviour
             {
                 bIfDriving = false;
                 raceMenu.SetActive(true);
-                map.GetComponent<MapRules>().PlayerPlace();
+                bool bIfUnlocked = map.GetComponent<MapRules>().PlayerPlace();
 
                 string nextTrackName = "track_" + (SelectionMenu.currentTrackIndex + 2).ToString();
                 if ( SelectionMenu.currentTrackIndex < SelectionMenu.trackAmount-1 )
                 {
-                    if ( !PlayerData.unlockedLaps.Contains( nextTrackName ) )
+                    if ( !PlayerData.unlockedLaps.Contains( nextTrackName ) && bIfUnlocked )
                     {
                         PlayerData.unlockedLaps.Add( nextTrackName );
                     }
@@ -162,5 +184,11 @@ public class PlayerController : MonoBehaviour
     public Cars GetCurrentCar()
     {
         return currentCar;
+    }
+
+    void EngineSound()
+    {
+        AudioSource audio = this.GetComponent<AudioSource>();
+        audio.pitch = pitch;
     }
 }

@@ -32,4 +32,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Resources/Scenes/Track_7.unity
     guid: 99c31f3e20645a94db7433abab3dee9e
+  - enabled: 1
+    path: Assets/Resources/Scenes/Track_8.unity
+    guid: 4df72f909cb30cd4e94abf4fac499aee
+  - enabled: 1
+    path: Assets/Resources/Scenes/Track_9.unity
+    guid: c19222c0671381e4ba75144c196dc5fc
+  - enabled: 1
+    path: Assets/Resources/Scenes/Track_10.unity
+    guid: 2dd7e3a1d7f35a0439d15158c06d9679
   m_configObjects: {}
