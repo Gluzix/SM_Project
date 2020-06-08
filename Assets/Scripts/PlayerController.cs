@@ -78,9 +78,9 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(transform.up * currentCar.speedForce * currentCar.speedTuning * currentCar.roadStickness);
                 throttle = true;
-                if (pitch < 3f)
+                if (pitch < 5f)
                 {
-                    pitch += 0.05f;
+                    pitch += 0.03f;
                 }
             }
             else
@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
                 rb.AddForce(transform.up * currentCar.brakeForce);
                 if (pitch > 1f)
                 {
-                    pitch -= 0.10f;
+                    pitch -= 0.15f;
                 }
             }
 
@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour
 
         if(pitch>1f && !throttle)
         {
-            pitch -= 0.05f;
+            pitch -= 0.15f;
         }
 
         EngineSound();
@@ -152,6 +152,8 @@ public class PlayerController : MonoBehaviour
 
             if ( lap > map.GetComponent<MapRules>().laps && bIfDriving )
             {
+                AudioSource audio = this.GetComponent<AudioSource>();
+                audio.volume = 0f;
                 bIfDriving = false;
                 raceMenu.SetActive(true);
                 bool bIfUnlocked = map.GetComponent<MapRules>().PlayerPlace();

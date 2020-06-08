@@ -587,8 +587,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: Next
+      - m_Target: {fileID: 19067415}
+        m_MethodName: RestartSavegame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

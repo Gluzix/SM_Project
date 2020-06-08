@@ -53,4 +53,13 @@ public class OptionsMenu : MonoBehaviour
         AudioSource gameAudio = GameObject.Find("MusicPlayer").GetComponent<AudioSource>();
         gameAudio.volume = InGameVolume;
     }
+
+    public void RestartSavegame()
+    {
+        PlayerData.playerCars.Clear();
+        PlayerData.unlockedLaps.Clear();
+        PlayerData.unlockedLaps.Add("track_1");
+        PlayerData.cash = 300000;
+        PlayerData.SaveGame();
+    }
 }
