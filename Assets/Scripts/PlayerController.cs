@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     private Cars currentCar;
     float pitch = 1f;
     bool throttle = false;
+    int gears = 1;
+    float gearPitch = 0.09f;
 
     // Start is called before the first frame update
     void Start()
@@ -78,9 +80,15 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(transform.up * currentCar.speedForce * currentCar.speedTuning * currentCar.roadStickness);
                 throttle = true;
-                if (pitch < 5f)
+                if (pitch < 5f && gears<6)
                 {
-                    pitch += 0.03f;
+                    pitch += gearPitch;
+                }
+                else
+                {
+                    gears++;
+                    pitch = 3f;
+                    gearPitch -= 0.01f;
                 }
             }
             else
@@ -94,6 +102,8 @@ public class PlayerController : MonoBehaviour
                 if (pitch > 1f)
                 {
                     pitch -= 0.15f;
+                    gears = 1;
+                    gearPitch = 0.09f;
                 }
             }
 
@@ -107,6 +117,8 @@ public class PlayerController : MonoBehaviour
         if(pitch>1f && !throttle)
         {
             pitch -= 0.15f;
+            gears = 1;
+            gearPitch = 0.09f;
         }
 
         EngineSound();

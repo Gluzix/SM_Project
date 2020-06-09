@@ -37,7 +37,6 @@ public class SelectionMenu : MonoBehaviour
 
         if ( !GlobalVars.ifCarsAreLoaded )
         {
-            PlayerData.LoadGame();
             GlobalVars.ifCarsAreLoaded = true;
         }
 

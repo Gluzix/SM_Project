@@ -6,6 +6,16 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+
+    public void Start()
+    {
+        if (!GlobalVars.ifCarsAreLoaded)
+        {
+            PlayerData.LoadGame();
+            GlobalVars.ifCarsAreLoaded = true;
+        }
+    }
+
     public void Next()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
