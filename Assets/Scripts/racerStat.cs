@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class racerStat : MonoBehaviour
+public class RacerStat : MonoBehaviour
 {
     private int controlPoint;
 
